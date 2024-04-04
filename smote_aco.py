@@ -119,7 +119,7 @@ class SMOTE_ACO(object):
                 chosen_y_smote = self.y_smote.copy().loc[chosen_ids]
                 
                 new_X_train = pd.concat([self.X_train.copy(),chosen_X_smote])
-                new_y_train = self.y_train.copy().append(chosen_y_smote)
+                new_y_train = pd.concat([self.y_train.copy(),chosen_y_smote])
                 
                 #classification
                 pipeline = make_pipeline(StandardScaler(),self.model)
