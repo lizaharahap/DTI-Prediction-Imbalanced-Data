@@ -15,7 +15,7 @@ import pandas as pd
 
 
 class SMOTE_ACO(object):
-    def __init__(self,init_pheromone = 0.7,rho = 0.5,num_ant = 100,max_iter = 200 ,max_idem=20,random_state=None):        
+    def __init__(self,init_pheromone = 0.3,rho = 0.8,num_ant = 20,max_iter = 50 ,max_idem=20,random_state=None):        
         #parameter setting
         self.init_pheromone = init_pheromone #initial pheromone on all edges
         self.rho = rho #evaporation rate pheromone update
@@ -57,7 +57,7 @@ class SMOTE_ACO(object):
     def oversampling(self,X_train,y_train,target,n_target):
         oversampled = SMOTE(sampling_strategy={target:n_target},
                             random_state=self.random_state,
-                            k_neighbors=7,
+                            k_neighbors=11,
                             n_jobs=-1)
         X_smote, y_smote = oversampled.fit_resample(X_train.reset_index(drop=True), y_train.reset_index(drop=True))
 
@@ -98,7 +98,7 @@ class SMOTE_ACO(object):
         best_y_train = self.y_train.copy()
         best_X_train = self.X_train.copy()
         
-        pipeline = make_pipeline(StandardScaler(),self.model)
+        pipeline = make_pipeline(self.model)
         pipeline.fit(best_X_train,best_y_train)
         best_fitness = f1_score(self.y_test,pipeline.predict(self.X_test),pos_label=1)
         
@@ -122,7 +122,7 @@ class SMOTE_ACO(object):
                 new_y_train = pd.concat([self.y_train.copy(),chosen_y_smote])
                 
                 #classification
-                pipeline = make_pipeline(StandardScaler(),self.model)
+                pipeline = make_pipeline(self.model)
                 pipeline.fit(new_X_train,new_y_train)
                 fitness = f1_score(self.y_test,pipeline.predict(self.X_test),pos_label=1)
                 
@@ -137,6 +137,8 @@ class SMOTE_ACO(object):
             self.pheromone_update(local_pheromone_matrix)
             
             fitness_history.append(best_found_fitness)
+            
+            print(best_found_y_train.value_counts())
             
             #checking best vs best found
             if best_found_fitness > best_fitness:
