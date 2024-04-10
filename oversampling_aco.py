@@ -15,7 +15,7 @@ import pandas as pd
 
 
 class OVRS_ACO(object):
-    def __init__(self,init_pheromone = 0.3,rho = 0.8,num_ant = 20,max_iter = 50 ,max_idem=20,kfold=5,random_state=None):        
+    def __init__(self,init_pheromone = 0.3,rho = 0.8,num_ant = 20,max_iter = 100 ,max_idem=10,kfold=5,random_state=None):        
         #parameter setting
         self.init_pheromone = init_pheromone #initial pheromone on all edges
         self.rho = rho #evaporation rate pheromone update
